@@ -30,3 +30,4 @@ mod fmt;
 pub use cell::Ref;
 pub use cell::RefCell;
 pub use cell::RefMut;
+pub use cell::RefVal;
