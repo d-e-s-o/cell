@@ -573,6 +573,20 @@ impl<'b, T: ?Sized> Ref<'b, T> {
             borrow: orig.borrow,
         }
     }
+
+    /// Make a new `RefVal` from the borrowed data.
+    ///
+    /// The `RefCell` is already immutably borrowed, so this operation
+    /// cannot fail.
+    #[inline]
+    pub fn map_val<U: Sized, F>(orig: Ref<'b, T>, f: F) -> RefVal<'b, U>
+        where F: FnOnce(&'b T) -> U
+    {
+        RefVal {
+            value: f(orig.value),
+            borrow: orig.borrow,
+        }
+    }
 }
 
 impl<'a, T: ?Sized + fmt::Display> fmt::Display for Ref<'a, T> {
@@ -688,6 +702,57 @@ impl<'b, T: ?Sized> DerefMut for RefMut<'b, T> {
 }
 
 impl<'a, T: ?Sized + fmt::Display> fmt::Display for RefMut<'a, T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.value.fmt(f)
+    }
+}
+
+
+/// A type containing a value that contains a borrowed reference to a
+/// value from a `RefCell<T>`.
+///
+/// See the [module-level documentation](index.html) for more.
+pub struct RefVal<'b, T> {
+    value: T,
+    borrow: BorrowRef<'b>,
+}
+
+impl<'b, T: Clone> RefVal<'b, T> {
+    /// Copies a `RefVal`.
+    ///
+    /// The `RefCell` is already immutably borrowed, so this cannot fail.
+    ///
+    /// This is an associated function that needs to be used as
+    /// `Ref::clone(...)`.  A `Clone` implementation or a method would interfere
+    /// with the widespread use of `r.borrow().clone()` to clone the contents of
+    /// a `RefCell`.
+    #[inline]
+    pub fn clone(orig: &RefVal<'b, T>) -> RefVal<'b, T> {
+        RefVal {
+            value: orig.value.clone(),
+            borrow: orig.borrow.clone(),
+        }
+    }
+}
+
+
+impl<'b, T> Deref for RefVal<'b, T> {
+    type Target = T;
+
+    #[inline]
+    fn deref(&self) -> &T {
+        &self.value
+    }
+}
+
+impl<'b, T> DerefMut for RefVal<'b, T> {
+    #[inline]
+    fn deref_mut(&mut self) -> &mut T {
+        &mut self.value
+    }
+}
+
+impl<'b, T: fmt::Display> fmt::Display for RefVal<'b, T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.value.fmt(f)
     }

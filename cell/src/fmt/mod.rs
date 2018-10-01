@@ -19,6 +19,7 @@ use std::ops::Deref;
 use cell::Ref;
 use cell::RefCell;
 use cell::RefMut;
+use cell::RefVal;
 
 
 impl<T: ?Sized + Debug> Debug for RefCell<T> {
@@ -55,6 +56,12 @@ impl<'b, T: ?Sized + Debug> Debug for Ref<'b, T> {
 }
 
 impl<'b, T: ?Sized + Debug> Debug for RefMut<'b, T> {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        Debug::fmt(&*(self.deref()), f)
+    }
+}
+
+impl<'b, T: Debug> Debug for RefVal<'b, T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
         Debug::fmt(&*(self.deref()), f)
     }

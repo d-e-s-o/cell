@@ -13,10 +13,12 @@ extern crate cell;
 
 use std::cell::Cell;
 use std::mem::drop;
+use std::slice::Iter;
 
 use cell::Ref;
 use cell::RefCell;
 use cell::RefMut;
+use cell::RefVal;
 
 
 #[test]
@@ -257,4 +259,62 @@ fn refcell_replace_borrows() {
     let x = RefCell::new(0);
     let _b = x.borrow();
     x.replace(1);
+}
+
+
+#[derive(Clone)]
+struct RefStrings(RefCell<Vec<String>>);
+
+impl RefStrings {
+    fn iter<'t, 's: 't>(&'s self) -> RefVal<'t, Iter<String>> {
+        Ref::map_val(self.0.borrow(), |x| x.iter())
+    }
+}
+
+
+#[test]
+fn refval_with_iterator() {
+    let strings = vec![
+        "one".to_string(),
+        "two".to_string(),
+        "three".to_string(),
+    ];
+
+    let ref_strings = RefStrings(RefCell::new(strings));
+    let mut it = ref_strings.iter().clone().rev().skip(1);
+    assert_eq!(it.next().unwrap(), "two");
+    assert_eq!(it.next().unwrap(), "one");
+    assert!(it.next().is_none());
+}
+
+#[test]
+fn refval_clone() {
+    let strings = vec![
+        "four".to_string(),
+        "five".to_string(),
+        "six".to_string(),
+    ];
+
+    let ref_strings1 = RefStrings(RefCell::new(strings));
+    let mut it1 = ref_strings1.iter();
+    assert_eq!(it1.next().unwrap(), "four");
+
+    let ref_strings2 = ref_strings1.clone();
+    let mut it2 = ref_strings2.iter();
+    assert_eq!(it2.next().unwrap(), "four");
+}
+
+
+#[derive(Debug)]
+struct Val {
+  val: u64,
+}
+
+#[test]
+fn refval_debug() {
+    let val = Val{val: 42};
+    let ref_cell = RefCell::new(val);
+    let ref_val = Ref::map_val(ref_cell.borrow(), |x| x);
+
+    assert_eq!(format!("{:?}", ref_val), "Val { val: 42 }")
 }
