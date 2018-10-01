@@ -1,6 +1,6 @@
 [package]
 name = "cell"
-version = "0.0.0"
+version = "0.1.0"
 authors = ["Daniel Mueller <deso@posteo.net>"]
 license = "MIT/Apache-2.0"
 homepage = "https://github.com/d-e-s-o/cell"
