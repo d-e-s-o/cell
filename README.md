@@ -2,6 +2,7 @@ cell
 ====
 
 - [Documentation][docs-rs]
+- [Changelog](CHANGELOG.md)
 
 **cell** is a crate providing a revised `RefCell` implementation with
 additional mapping capabilities. It can be used as a drop-in replacement
@@ -111,6 +112,7 @@ A discussion around the upstreaming of this functionality is tracked by
 Rust [issue #54776][rust-issue-54776].
 
 
+[docs-rs]: https://docs.rs/crate/cell
 [rust-ref-cell]: https://doc.rust-lang.org/std/cell/struct.RefCell.html
 [rust-ref]: https://doc.rust-lang.org/std/cell/struct.Ref.html
 [rust-ref-map]: https://doc.rust-lang.org/std/cell/struct.Ref.html#method.map
