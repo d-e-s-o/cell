@@ -105,10 +105,11 @@ need for providing alternative `RefCell` and `Ref` implementations.
 
 No other existing solutions for this problem have been found.
 
-The author will engage with the Rust community to explore the
-possibility of upstreaming relevant changes to the standard library.
+A discussion around the upstreaming of this functionality is tracked by
+Rust [issue #54776][rust-issue-54776].
 
 
 [rust-ref-cell]: https://doc.rust-lang.org/std/cell/struct.RefCell.html
 [rust-ref]: https://doc.rust-lang.org/std/cell/struct.Ref.html
 [rust-ref-map]: https://doc.rust-lang.org/std/cell/struct.Ref.html#method.map
+[rust-issue-54776]: https://github.com/rust-lang/rust/issues/54776
