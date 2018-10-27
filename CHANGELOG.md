@@ -1,5 +1,5 @@
-Unreleased
-----------
+0.1.2
+-----
 - Added `crate` prefix to imports to make crate ready for 2018 edition
 
 
