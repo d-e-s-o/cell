@@ -16,10 +16,10 @@ use std::fmt::Formatter;
 use std::fmt::Result;
 use std::ops::Deref;
 
-use cell::Ref;
-use cell::RefCell;
-use cell::RefMut;
-use cell::RefVal;
+use crate::cell::Ref;
+use crate::cell::RefCell;
+use crate::cell::RefMut;
+use crate::cell::RefVal;
 
 
 impl<T: ?Sized + Debug> Debug for RefCell<T> {
