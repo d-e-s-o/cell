@@ -1,3 +1,8 @@
+Unreleased
+----------
+- Added `crate` prefix to imports to make crate ready for 2018 edition
+
+
 0.1.1
 -----
 - Added reference to Rust issue for discussion of the problem solved
