@@ -1,5 +1,5 @@
-Unreleased
-----------
+0.1.3
+-----
 - Dropped dependency on `optin_builtin_traits` feature and made crate
   compilable with stable toolchain
 
