@@ -378,7 +378,11 @@ impl<T: ?Sized> RefCell<T> {
 
 unsafe impl<T: ?Sized> Send for RefCell<T> where T: Send {}
 
-impl<T: ?Sized> !Sync for RefCell<T> {}
+// Note that `RefCell` does not explicitly have a negative trait bound
+// for `Sync` as negative trait bounds are only available on nightly but
+// we want to be available on stable. However, `RefCell` still won't
+// implement `Sync` as it contains an `std::cell::UnsafeCell` which has
+// such a negative trait bound for `Sync`.
 
 impl<T: Clone> Clone for RefCell<T> {
     /// # Panics
