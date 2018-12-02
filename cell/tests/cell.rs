@@ -20,7 +20,6 @@ use cell::RefCell;
 use cell::RefMut;
 use cell::RefVal;
 
-
 #[test]
 fn ref_and_refmut_have_sensible_show() {
     let refcell = RefCell::new("foo");
@@ -177,7 +176,9 @@ fn as_ptr() {
     assert_eq!(1, unsafe { *c1.as_ptr() });
 
     let c2: Cell<usize> = Cell::new(0);
-    unsafe { *c2.as_ptr() = 1; }
+    unsafe {
+        *c2.as_ptr() = 1;
+    }
     assert_eq!(1, c2.get());
 
     let r1: RefCell<usize> = RefCell::new(0);
@@ -185,7 +186,9 @@ fn as_ptr() {
     assert_eq!(1, unsafe { *r1.as_ptr() });
 
     let r2: RefCell<usize> = RefCell::new(0);
-    unsafe { *r2.as_ptr() = 1; }
+    unsafe {
+        *r2.as_ptr() = 1;
+    }
     assert_eq!(1, *r2.borrow());
 }
 
@@ -261,7 +264,6 @@ fn refcell_replace_borrows() {
     x.replace(1);
 }
 
-
 #[derive(Clone)]
 struct RefStrings(RefCell<Vec<String>>);
 
@@ -271,14 +273,9 @@ impl RefStrings {
     }
 }
 
-
 #[test]
 fn refval_with_iterator() {
-    let strings = vec![
-        "one".to_string(),
-        "two".to_string(),
-        "three".to_string(),
-    ];
+    let strings = vec!["one".to_string(), "two".to_string(), "three".to_string()];
 
     let ref_strings = RefStrings(RefCell::new(strings));
     let mut it = ref_strings.iter().clone().rev().skip(1);
@@ -289,11 +286,7 @@ fn refval_with_iterator() {
 
 #[test]
 fn refval_clone() {
-    let strings = vec![
-        "four".to_string(),
-        "five".to_string(),
-        "six".to_string(),
-    ];
+    let strings = vec!["four".to_string(), "five".to_string(), "six".to_string()];
 
     let ref_strings1 = RefStrings(RefCell::new(strings));
     let mut it1 = ref_strings1.iter();
@@ -304,15 +297,14 @@ fn refval_clone() {
     assert_eq!(it2.next().unwrap(), "four");
 }
 
-
 #[derive(Debug)]
 struct Val {
-  val: u64,
+    val: u64,
 }
 
 #[test]
 fn refval_debug() {
-    let val = Val{val: 42};
+    let val = Val { val: 42 };
     let ref_cell = RefCell::new(val);
     let ref_val = Ref::map_val(ref_cell.borrow(), |x| x);
 

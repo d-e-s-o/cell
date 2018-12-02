@@ -11,13 +11,13 @@
 
 #![feature(optin_builtin_traits)]
 #![deny(
-  future_incompatible,
-  missing_debug_implementations,
-  missing_docs,
-  rust_2018_compatibility,
-  unused_import_braces,
-  unused_results,
-  warnings,
+    future_incompatible,
+    missing_debug_implementations,
+    missing_docs,
+    rust_2018_compatibility,
+    unused_import_braces,
+    unused_results,
+    warnings
 )]
 
 //! A replacement of std::cell::RefCell adding advanced support for

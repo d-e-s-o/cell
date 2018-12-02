@@ -21,15 +21,10 @@ use crate::cell::RefCell;
 use crate::cell::RefMut;
 use crate::cell::RefVal;
 
-
 impl<T: ?Sized + Debug> Debug for RefCell<T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
         match self.try_borrow() {
-            Ok(borrow) => {
-                f.debug_struct("RefCell")
-                    .field("value", &borrow)
-                    .finish()
-            }
+            Ok(borrow) => f.debug_struct("RefCell").field("value", &borrow).finish(),
             Err(_) => {
                 // The RefCell is mutably borrowed so we can't look at its value
                 // here. Show a placeholder instead.

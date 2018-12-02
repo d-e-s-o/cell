@@ -19,7 +19,6 @@ use std::mem;
 use std::ops::Deref;
 use std::ops::DerefMut;
 
-
 /// A mutable memory location with dynamically checked borrow rules
 ///
 /// See the [module-level documentation](index.html) for more.
@@ -370,9 +369,7 @@ impl<T: ?Sized> RefCell<T> {
     /// ```
     #[inline]
     pub fn get_mut(&mut self) -> &mut T {
-        unsafe {
-            &mut *self.value.get()
-        }
+        unsafe { &mut *self.value.get() }
     }
 }
 
@@ -390,7 +387,7 @@ impl<T: Clone> Clone for RefCell<T> {
     }
 }
 
-impl<T:Default> Default for RefCell<T> {
+impl<T: Default> Default for RefCell<T> {
     /// Creates a `RefCell<T>`, with the `Default` value for T.
     #[inline]
     fn default() -> RefCell<T> {
@@ -507,7 +504,9 @@ impl<'b> Clone for BorrowRef<'b> {
         // a writing borrow.
         assert!(borrow != isize::max_value());
         self.borrow.set(borrow + 1);
-        BorrowRef { borrow: self.borrow }
+        BorrowRef {
+            borrow: self.borrow,
+        }
     }
 }
 
@@ -566,7 +565,8 @@ impl<'b, T: ?Sized> Ref<'b, T> {
     /// ```
     #[inline]
     pub fn map<U: ?Sized, F>(orig: Ref<'b, T>, f: F) -> Ref<'b, U>
-        where F: FnOnce(&T) -> &U
+    where
+        F: FnOnce(&T) -> &U,
     {
         Ref {
             value: f(orig.value),
@@ -580,7 +580,8 @@ impl<'b, T: ?Sized> Ref<'b, T> {
     /// cannot fail.
     #[inline]
     pub fn map_val<U: Sized, F>(orig: Ref<'b, T>, f: F) -> RefVal<'b, U>
-        where F: FnOnce(&'b T) -> U
+    where
+        F: FnOnce(&'b T) -> U,
     {
         RefVal {
             value: f(orig.value),
@@ -621,7 +622,8 @@ impl<'b, T: ?Sized> RefMut<'b, T> {
     /// ```
     #[inline]
     pub fn map<U: ?Sized, F>(orig: RefMut<'b, T>, f: F) -> RefMut<'b, U>
-        where F: FnOnce(&mut T) -> &mut U
+    where
+        F: FnOnce(&mut T) -> &mut U,
     {
         // FIXME(nll-rfc#40): fix borrow-check
         let RefMut { value, borrow } = orig;
@@ -656,7 +658,7 @@ impl<'b> BorrowRefMut<'b> {
             UNUSED => {
                 borrow.set(UNUSED - 1);
                 Some(BorrowRefMut { borrow: borrow })
-            },
+            }
             _ => None,
         }
     }
@@ -673,7 +675,9 @@ impl<'b> BorrowRefMut<'b> {
         // Prevent the borrow counter from underflowing.
         assert!(borrow != isize::min_value());
         self.borrow.set(borrow - 1);
-        BorrowRefMut { borrow: self.borrow }
+        BorrowRefMut {
+            borrow: self.borrow,
+        }
     }
 }
 
@@ -707,7 +711,6 @@ impl<'a, T: ?Sized + fmt::Display> fmt::Display for RefMut<'a, T> {
     }
 }
 
-
 /// A type containing a value that contains a borrowed reference to a
 /// value from a `RefCell<T>`.
 ///
@@ -734,7 +737,6 @@ impl<'b, T: Clone> RefVal<'b, T> {
         }
     }
 }
-
 
 impl<'b, T> Deref for RefVal<'b, T> {
     type Target = T;
