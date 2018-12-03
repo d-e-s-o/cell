@@ -1,6 +1,7 @@
 Unreleased
 ----------
 - Updated original `cell` baseline to Rust 1.30.1
+- Adjusted crate to use Rust Edition 2018
 
 
 0.1.3
