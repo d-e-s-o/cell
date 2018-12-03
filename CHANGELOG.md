@@ -1,3 +1,8 @@
+Unreleased
+----------
+- Updated original `cell` baseline to Rust 1.30.1
+
+
 0.1.3
 -----
 - Dropped dependency on `optin_builtin_traits` feature and made crate

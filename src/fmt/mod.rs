@@ -1,6 +1,7 @@
-// mod.rs
-
-// Original work Copyright 2013-2015 The Rust Project Developers.
+// Copyright 2013-2015 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
 // Modified work Copyright 2018 Daniel Mueller (deso@posteo.net).
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
@@ -66,3 +67,6 @@ impl<'b, T: Debug> Debug for RefVal<'b, T> {
         Debug::fmt(&*(self.deref()), f)
     }
 }
+
+// If you expected tests to be here, look instead at the run-pass/ifmt.rs test,
+// it's a lot easier than creating all of the rt::Piece structures here.

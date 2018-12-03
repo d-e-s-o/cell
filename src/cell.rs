@@ -1,6 +1,7 @@
-// cell.rs
-
-// Original work Copyright 2012-2014 The Rust Project Developers.
+// Copyright 2012-2014 The Rust Project Developers. See the COPYRIGHT
+// file at the top-level directory of this distribution and at
+// http://rust-lang.org/COPYRIGHT.
+//
 // Modified work Copyright 2018 Daniel Mueller (deso@posteo.net).
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
@@ -631,7 +632,7 @@ impl<'b, T: ?Sized> RefMut<'b, T> {
         let RefMut { value, borrow } = orig;
         RefMut {
             value: f(value),
-            borrow: borrow,
+            borrow,
         }
     }
 }
@@ -659,7 +660,7 @@ impl<'b> BorrowRefMut<'b> {
         match borrow.get() {
             UNUSED => {
                 borrow.set(UNUSED - 1);
-                Some(BorrowRefMut { borrow: borrow })
+                Some(BorrowRefMut { borrow })
             },
             _ => None,
         }
