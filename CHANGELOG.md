@@ -2,6 +2,8 @@ Unreleased
 ----------
 - Updated original `cell` baseline to Rust 1.30.1
 - Adjusted crate to use Rust Edition 2018
+- Removed `#![deny(warnings)]` attribute and demoted lints prone to
+  future changes from `deny` to `warn`
 
 
 0.1.3
