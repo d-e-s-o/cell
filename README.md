@@ -73,18 +73,15 @@ of `Ref::map_val`.
 ```patch
 --- test.rs
 +++ test.rs
-@@ -1,5 +1,8 @@
+@@ -1,13 +1,14 @@
 -use std::cell::Ref;
 -use std::cell::RefCell;
-+extern crate cell;
-+
 +use cell::Ref;
 +use cell::RefCell;
 +use cell::RefVal;
  use std::slice::Iter;
 
 
-@@ -13,8 +16,8 @@ use std::slice::Iter;
  struct RefStrings(RefCell<Vec<String>>);
 
  impl RefStrings {
