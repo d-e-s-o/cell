@@ -50,19 +50,19 @@ impl<T: ?Sized + Debug> Debug for RefCell<T> {
     }
 }
 
-impl<'b, T: ?Sized + Debug> Debug for Ref<'b, T> {
+impl<T: ?Sized + Debug> Debug for Ref<'_, T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
         Debug::fmt(&**self, f)
     }
 }
 
-impl<'b, T: ?Sized + Debug> Debug for RefMut<'b, T> {
+impl<T: ?Sized + Debug> Debug for RefMut<'_, T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
         Debug::fmt(&*(self.deref()), f)
     }
 }
 
-impl<'b, T: Debug> Debug for RefVal<'b, T> {
+impl<T: Sized + Debug> Debug for RefVal<'_, T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
         Debug::fmt(&*(self.deref()), f)
     }

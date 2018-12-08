@@ -10,8 +10,6 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-extern crate cell;
-
 use std::cell::Cell;
 use std::mem::drop;
 use std::slice::Iter;

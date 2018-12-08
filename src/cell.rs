@@ -100,7 +100,7 @@ impl<T> RefCell<T> {
     /// let c = RefCell::new(5);
     /// ```
     #[inline]
-    pub fn new(value: T) -> RefCell<T> {
+    pub const fn new(value: T) -> RefCell<T> {
         RefCell {
             value: UnsafeCell::new(value),
             borrow: Cell::new(UNUSED),
@@ -492,7 +492,7 @@ impl<'b> BorrowRef<'b> {
     }
 }
 
-impl<'b> Drop for BorrowRef<'b> {
+impl Drop for BorrowRef<'_> {
     #[inline]
     fn drop(&mut self) {
         let borrow = self.borrow.get();
@@ -501,9 +501,9 @@ impl<'b> Drop for BorrowRef<'b> {
     }
 }
 
-impl<'b> Clone for BorrowRef<'b> {
+impl Clone for BorrowRef<'_> {
     #[inline]
-    fn clone(&self) -> BorrowRef<'b> {
+    fn clone(&self) -> Self {
         // Since this Ref exists, we know the borrow flag
         // is a reading borrow.
         let borrow = self.borrow.get();
@@ -525,7 +525,7 @@ pub struct Ref<'b, T: ?Sized + 'b> {
     borrow: BorrowRef<'b>,
 }
 
-impl<'b, T: ?Sized> Deref for Ref<'b, T> {
+impl<T: ?Sized> Deref for Ref<'_, T> {
     type Target = T;
 
     #[inline]
@@ -594,7 +594,7 @@ impl<'b, T: ?Sized> Ref<'b, T> {
     }
 }
 
-impl<'a, T: ?Sized + fmt::Display> fmt::Display for Ref<'a, T> {
+impl<T: ?Sized + fmt::Display> fmt::Display for Ref<'_, T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.value.fmt(f)
     }
@@ -641,7 +641,7 @@ struct BorrowRefMut<'b> {
     borrow: &'b Cell<BorrowFlag>,
 }
 
-impl<'b> Drop for BorrowRefMut<'b> {
+impl Drop for BorrowRefMut<'_> {
     #[inline]
     fn drop(&mut self) {
         let borrow = self.borrow.get();
@@ -690,7 +690,7 @@ pub struct RefMut<'b, T: ?Sized + 'b> {
     borrow: BorrowRefMut<'b>,
 }
 
-impl<'b, T: ?Sized> Deref for RefMut<'b, T> {
+impl<T: ?Sized> Deref for RefMut<'_, T> {
     type Target = T;
 
     #[inline]
@@ -699,14 +699,14 @@ impl<'b, T: ?Sized> Deref for RefMut<'b, T> {
     }
 }
 
-impl<'b, T: ?Sized> DerefMut for RefMut<'b, T> {
+impl<T: ?Sized> DerefMut for RefMut<'_, T> {
     #[inline]
     fn deref_mut(&mut self) -> &mut T {
         self.value
     }
 }
 
-impl<'a, T: ?Sized + fmt::Display> fmt::Display for RefMut<'a, T> {
+impl<T: ?Sized + fmt::Display> fmt::Display for RefMut<'_, T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.value.fmt(f)
     }
@@ -741,7 +741,7 @@ impl<'b, T: Clone> RefVal<'b, T> {
 }
 
 
-impl<'b, T> Deref for RefVal<'b, T> {
+impl<T> Deref for RefVal<'_, T> {
     type Target = T;
 
     #[inline]
@@ -750,14 +750,14 @@ impl<'b, T> Deref for RefVal<'b, T> {
     }
 }
 
-impl<'b, T> DerefMut for RefVal<'b, T> {
+impl<T> DerefMut for RefVal<'_, T> {
     #[inline]
     fn deref_mut(&mut self) -> &mut T {
         &mut self.value
     }
 }
 
-impl<'b, T: fmt::Display> fmt::Display for RefVal<'b, T> {
+impl<T: fmt::Display> fmt::Display for RefVal<'_, T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.value.fmt(f)
     }
