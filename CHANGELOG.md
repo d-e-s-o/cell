@@ -2,7 +2,9 @@ Unreleased
 ----------
 - Enabled CI pipeline comprising building, testing, and linting of the
   project
-  - Added badge indicating pipeline status
+- Added badges indicating pipeline status, current `crates.io` published
+  version of the crate, current `docs.rs` published version of the
+  documentation, and minimum version of `rustc` required
 
 
 0.1.4
