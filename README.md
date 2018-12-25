@@ -1,3 +1,5 @@
+[![pipeline](https://gitlab.com/d-e-s-o/cell/badges/master/pipeline.svg)](https://gitlab.com/d-e-s-o/cell/commits/master)
+
 cell
 ====
 
