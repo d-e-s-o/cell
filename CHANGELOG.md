@@ -1,5 +1,5 @@
-Unreleased
-----------
+0.1.5
+-----
 - Enabled CI pipeline comprising building, testing, and linting of the
   project
 - Added badges indicating pipeline status, current `crates.io` published
