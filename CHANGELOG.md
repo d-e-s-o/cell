@@ -1,3 +1,8 @@
+Unreleased
+----------
+- Removed implicit `T: Clone` constraint from `RefVal::map`
+
+
 0.1.6
 -----
 - Added `map` method to `RefVal` struct
