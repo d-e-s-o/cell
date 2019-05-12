@@ -1,3 +1,7 @@
+Unreleased
+----------
+- `RefVal::map` no longer requires `<T>` to be `Clone`
+
 0.1.6
 -----
 - Added `map` method to `RefVal` struct

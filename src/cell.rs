@@ -722,7 +722,7 @@ pub struct RefVal<'b, T> {
     borrow: BorrowRef<'b>,
 }
 
-impl<'b, T: Clone> RefVal<'b, T> {
+impl<'b, T> RefVal<'b, T> {
     /// Copies a `RefVal`.
     ///
     /// The `RefCell` is already immutably borrowed, so this cannot fail.
@@ -732,7 +732,7 @@ impl<'b, T: Clone> RefVal<'b, T> {
     /// with the widespread use of `r.borrow().clone()` to clone the contents of
     /// a `RefCell`.
     #[inline]
-    pub fn clone(orig: &RefVal<'b, T>) -> RefVal<'b, T> {
+    pub fn clone(orig: &RefVal<'b, T>) -> RefVal<'b, T> where T: Clone {
         RefVal {
             value: orig.value.clone(),
             borrow: orig.borrow.clone(),
