@@ -31,3 +31,4 @@ pub use crate::cell::Ref;
 pub use crate::cell::RefCell;
 pub use crate::cell::RefMut;
 pub use crate::cell::RefVal;
+pub use crate::cell::RefValMut;

@@ -1,3 +1,8 @@
+Unreleased
+----------
+- Added `RefValMut`, similar `RefVal` but with ref cell borrowed mutably
+
+
 0.1.6
 -----
 - Added `map` method to `RefVal` struct

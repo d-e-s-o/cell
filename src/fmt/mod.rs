@@ -21,6 +21,7 @@ use crate::cell::Ref;
 use crate::cell::RefCell;
 use crate::cell::RefMut;
 use crate::cell::RefVal;
+use crate::RefValMut;
 
 
 impl<T: ?Sized + Debug> Debug for RefCell<T> {
@@ -63,6 +64,12 @@ impl<T: ?Sized + Debug> Debug for RefMut<'_, T> {
 }
 
 impl<T: Sized + Debug> Debug for RefVal<'_, T> {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        Debug::fmt(&*(self.deref()), f)
+    }
+}
+
+impl<T: Sized + Debug> Debug for RefValMut<'_, T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
         Debug::fmt(&*(self.deref()), f)
     }

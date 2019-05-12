@@ -635,6 +635,20 @@ impl<'b, T: ?Sized> RefMut<'b, T> {
             borrow,
         }
     }
+
+    /// Make a new `RefVal` from the borrowed data.
+    ///
+    /// The `RefCell` is already immutably borrowed, so this operation
+    /// cannot fail.
+    #[inline]
+    pub fn map_val<U: Sized, F>(orig: RefMut<'b, T>, f: F) -> RefValMut<'b, U>
+        where F: FnOnce(&'b mut T) -> U
+    {
+        RefValMut {
+            value: f(orig.value),
+            borrow: orig.borrow,
+        }
+    }
 }
 
 struct BorrowRefMut<'b> {
@@ -772,6 +786,54 @@ impl<T> DerefMut for RefVal<'_, T> {
 }
 
 impl<T: fmt::Display> fmt::Display for RefVal<'_, T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.value.fmt(f)
+    }
+}
+
+
+/// A type containing a value that contains a borrowed mutable reference to a
+/// value from a `RefCell<T>`.
+///
+/// See the [module-level documentation](index.html) for more.
+pub struct RefValMut<'b, T> {
+    value: T,
+    borrow: BorrowRefMut<'b>,
+}
+
+impl<'b, T> RefValMut<'b, T> {
+    /// Make a new `RefValMut` from the another `RefValMut`.
+    ///
+    /// The `RefCell` is already mutably borrowed, so this operation
+    /// cannot fail.
+    #[inline]
+    pub fn map<U: Sized, F>(orig: RefValMut<'b, T>, f: F) -> RefValMut<'b, U>
+        where F: FnOnce(T) -> U
+    {
+        RefValMut {
+            value: f(orig.value),
+            borrow: orig.borrow,
+        }
+    }
+}
+
+impl<T> Deref for RefValMut<'_, T> {
+    type Target = T;
+
+    #[inline]
+    fn deref(&self) -> &T {
+        &self.value
+    }
+}
+
+impl<T> DerefMut for RefValMut<'_, T> {
+    #[inline]
+    fn deref_mut(&mut self) -> &mut T {
+        &mut self.value
+    }
+}
+
+impl<T: fmt::Display> fmt::Display for RefValMut<'_, T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.value.fmt(f)
     }
