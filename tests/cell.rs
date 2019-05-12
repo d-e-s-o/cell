@@ -317,3 +317,22 @@ fn refval_debug() {
 
     assert_eq!(format!("{:?}", ref_val), "Val { val: 42 }")
 }
+
+#[test]
+fn refval_map() {
+    let ref_strings: RefCell<Vec<String>> = RefCell::new(vec![
+        "ten".to_owned(),
+        "eleven".to_owned(),
+        "twelve".to_owned(),
+    ]);
+
+    // `RefVal` containing an iterator over `ref_strings` strings
+    let it_1: RefVal<_> = Ref::map_val(RefCell::borrow(&ref_strings), |v| v.iter().map(|s| s.as_str()));
+    // Map `RefVal` to another `RefVal`: collect iterator into a vec.
+    // Note new `Vec` contains references to original `String` objects.
+    let refs_1: RefVal<Vec<&str>> = RefVal::map(it_1, |it| it.collect());
+    drop(refs_1);
+
+    // Assert refcount == 0
+    ref_strings.borrow_mut();
+}

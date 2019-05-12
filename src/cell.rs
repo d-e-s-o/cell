@@ -738,6 +738,20 @@ impl<'b, T: Clone> RefVal<'b, T> {
             borrow: orig.borrow.clone(),
         }
     }
+
+    /// Make a new `RefVal` from the anotehr `RefVal`.
+    ///
+    /// The `RefCell` is already immutably borrowed, so this operation
+    /// cannot fail.
+    #[inline]
+    pub fn map<U: Sized, F>(orig: RefVal<'b, T>, f: F) -> RefVal<'b, U>
+        where F: FnOnce(T) -> U
+    {
+        RefVal {
+            value: f(orig.value),
+            borrow: orig.borrow,
+        }
+    }
 }
 
 
