@@ -2,7 +2,7 @@
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
-// Modified work Copyright 2018 Daniel Mueller (deso@posteo.net).
+// Modified work Copyright 2018-2019 Daniel Mueller (deso@posteo.net).
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
@@ -21,6 +21,7 @@ use crate::cell::Ref;
 use crate::cell::RefCell;
 use crate::cell::RefMut;
 use crate::cell::RefVal;
+use crate::RefValMut;
 
 
 impl<T: ?Sized + Debug> Debug for RefCell<T> {
@@ -63,6 +64,12 @@ impl<T: ?Sized + Debug> Debug for RefMut<'_, T> {
 }
 
 impl<T: Sized + Debug> Debug for RefVal<'_, T> {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        Debug::fmt(&*(self.deref()), f)
+    }
+}
+
+impl<T: Sized + Debug> Debug for RefValMut<'_, T> {
     fn fmt(&self, f: &mut Formatter) -> Result {
         Debug::fmt(&*(self.deref()), f)
     }

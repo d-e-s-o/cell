@@ -1,7 +1,7 @@
 // lib.rs
 
 // Original work Copyright 2014 The Rust Project Developers.
-// Modified work Copyright 2018 Daniel Mueller (deso@posteo.net).
+// Modified work Copyright 2018-2019 Daniel Mueller (deso@posteo.net).
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
@@ -31,3 +31,4 @@ pub use crate::cell::Ref;
 pub use crate::cell::RefCell;
 pub use crate::cell::RefMut;
 pub use crate::cell::RefVal;
+pub use crate::cell::RefValMut;

@@ -1,5 +1,7 @@
 Unreleased
 ----------
+- Added `RefValMut` providing advanced mapping functionality for mutable
+  borrows
 - Removed implicit `T: Clone` constraint from `RefVal::map`
 
 

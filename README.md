@@ -99,6 +99,8 @@ of `Ref::map_val`.
 
 ```
 
+Similar functionality exists for mutable borrow with `RefValMut`.
+
 
 #### Alternative Implementations
 

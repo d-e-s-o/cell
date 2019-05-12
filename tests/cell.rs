@@ -337,3 +337,26 @@ fn refval_map() {
     // Assert refcount == 0
     ref_strings.borrow_mut();
 }
+
+#[test]
+fn refvalmut() {
+    let ref_strings = RefCell::new(vec![
+        "one".to_owned(),
+        "two".to_owned(),
+        "three".to_owned(),
+    ]);
+
+    // `RefValMut` containing a mutable iterator over `ref_strings` strings
+    let mut it_1 = RefMut::map_val(RefCell::borrow_mut(&ref_strings), |v| v.iter_mut());
+    for s in &mut it_1.by_ref() {
+        s.make_ascii_uppercase();
+    }
+    drop(it_1);
+
+    let strings = ref_strings.borrow();
+    assert_eq!(vec![
+        "ONE".to_owned(),
+        "TWO".to_owned(),
+        "THREE".to_owned(),
+    ], *strings);
+}
