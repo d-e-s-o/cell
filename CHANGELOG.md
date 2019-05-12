@@ -1,3 +1,8 @@
+Unreleased
+----------
+- Added `map` method to `RefVal` struct
+
+
 0.1.5
 -----
 - Enabled CI pipeline comprising building, testing, and linting of the

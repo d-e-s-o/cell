@@ -2,7 +2,7 @@
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
-// Modified work Copyright 2018 Daniel Mueller (deso@posteo.net).
+// Modified work Copyright 2018-2019 Daniel Mueller (deso@posteo.net).
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
@@ -316,4 +316,24 @@ fn refval_debug() {
     let ref_val = Ref::map_val(ref_cell.borrow(), |x| x);
 
     assert_eq!(format!("{:?}", ref_val), "Val { val: 42 }")
+}
+
+#[test]
+fn refval_map() {
+    let ref_strings = RefCell::new(vec![
+        "ten".to_owned(),
+        "eleven".to_owned(),
+        "twelve".to_owned(),
+    ]);
+
+    // `RefVal` containing an iterator over `ref_strings` strings
+    let it_1 = Ref::map_val(RefCell::borrow(&ref_strings), |v| v.iter().map(|s| s.as_str()));
+    // Map `RefVal` to another `RefVal`: collect iterator into a vector.
+    // Note that the new `Vec` contains references to original `String`
+    // objects.
+    let refs_1 = RefVal::map(it_1, |it| it.collect::<Vec<&str>>());
+    drop(refs_1);
+
+    // Assert refcount == 0
+    ref_strings.borrow_mut();
 }

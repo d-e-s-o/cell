@@ -2,7 +2,7 @@
 // file at the top-level directory of this distribution and at
 // http://rust-lang.org/COPYRIGHT.
 //
-// Modified work Copyright 2018 Daniel Mueller (deso@posteo.net).
+// Modified work Copyright 2018-2019 Daniel Mueller (deso@posteo.net).
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
 // http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
@@ -736,6 +736,20 @@ impl<'b, T: Clone> RefVal<'b, T> {
         RefVal {
             value: orig.value.clone(),
             borrow: orig.borrow.clone(),
+        }
+    }
+
+    /// Make a new `RefVal` from the another `RefVal`.
+    ///
+    /// The `RefCell` is already immutably borrowed, so this operation
+    /// cannot fail.
+    #[inline]
+    pub fn map<U: Sized, F>(orig: RefVal<'b, T>, f: F) -> RefVal<'b, U>
+        where F: FnOnce(T) -> U
+    {
+        RefVal {
+            value: f(orig.value),
+            borrow: orig.borrow,
         }
     }
 }
