@@ -1,3 +1,8 @@
+Unreleased
+----------
+- Updated original `cell` baseline to Rust 1.35.0
+
+
 0.1.7
 -----
 - Added `RefValMut` providing advanced mapping functionality for mutable

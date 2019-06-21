@@ -150,6 +150,29 @@ impl<T> RefCell<T> {
         mem::replace(&mut *self.borrow_mut(), t)
     }
 
+    /// Replaces the wrapped value with a new one computed from `f`, returning
+    /// the old value, without deinitializing either one.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the value is currently borrowed.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::cell::RefCell;
+    /// let cell = RefCell::new(5);
+    /// let old_value = cell.replace_with(|&mut old| old + 1);
+    /// assert_eq!(old_value, 5);
+    /// assert_eq!(cell, RefCell::new(6));
+    /// ```
+    #[inline]
+    pub fn replace_with<F: FnOnce(&mut T) -> T>(&self, f: F) -> T {
+        let mut_borrow = &mut *self.borrow_mut();
+        let replacement = f(mut_borrow);
+        mem::replace(mut_borrow, replacement)
+    }
+
     /// Swaps the wrapped value of `self` with the wrapped value of `other`,
     /// without deinitializing either one.
     ///
@@ -540,7 +563,7 @@ impl<'b, T: ?Sized> Ref<'b, T> {
     /// The `RefCell` is already immutably borrowed, so this cannot fail.
     ///
     /// This is an associated function that needs to be used as
-    /// `Ref::clone(...)`.  A `Clone` implementation or a method would interfere
+    /// `Ref::clone(...)`. A `Clone` implementation or a method would interfere
     /// with the widespread use of `r.borrow().clone()` to clone the contents of
     /// a `RefCell`.
     #[inline]
@@ -551,7 +574,7 @@ impl<'b, T: ?Sized> Ref<'b, T> {
         }
     }
 
-    /// Make a new `Ref` for a component of the borrowed data.
+    /// Makes a new `Ref` for a component of the borrowed data.
     ///
     /// The `RefCell` is already immutably borrowed, so this cannot fail.
     ///
@@ -579,6 +602,35 @@ impl<'b, T: ?Sized> Ref<'b, T> {
         }
     }
 
+    /// Splits a `Ref` into multiple `Ref`s for different components of the
+    /// borrowed data.
+    ///
+    /// The `RefCell` is already immutably borrowed, so this cannot fail.
+    ///
+    /// This is an associated function that needs to be used as
+    /// `Ref::map_split(...)`. A method would interfere with methods of the same
+    /// name on the contents of a `RefCell` used through `Deref`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::cell::{Ref, RefCell};
+    ///
+    /// let cell = RefCell::new([1, 2, 3, 4]);
+    /// let borrow = cell.borrow();
+    /// let (begin, end) = Ref::map_split(borrow, |slice| slice.split_at(2));
+    /// assert_eq!(*begin, [1, 2]);
+    /// assert_eq!(*end, [3, 4]);
+    /// ```
+    #[inline]
+    pub fn map_split<U: ?Sized, V: ?Sized, F>(orig: Ref<'b, T>, f: F) -> (Ref<'b, U>, Ref<'b, V>)
+        where F: FnOnce(&T) -> (&U, &V)
+    {
+        let (a, b) = f(orig.value);
+        let borrow = orig.borrow.clone();
+        (Ref { value: a, borrow }, Ref { value: b, borrow: orig.borrow })
+    }
+
     /// Make a new `RefVal` from the borrowed data.
     ///
     /// The `RefCell` is already immutably borrowed, so this operation
@@ -601,13 +653,13 @@ impl<T: ?Sized + fmt::Display> fmt::Display for Ref<'_, T> {
 }
 
 impl<'b, T: ?Sized> RefMut<'b, T> {
-    /// Make a new `RefMut` for a component of the borrowed data, e.g. an enum
+    /// Makes a new `RefMut` for a component of the borrowed data, e.g., an enum
     /// variant.
     ///
     /// The `RefCell` is already mutably borrowed, so this cannot fail.
     ///
     /// This is an associated function that needs to be used as
-    /// `RefMut::map(...)`.  A method would interfere with methods of the same
+    /// `RefMut::map(...)`. A method would interfere with methods of the same
     /// name on the contents of a `RefCell` used through `Deref`.
     ///
     /// # Examples
@@ -634,6 +686,42 @@ impl<'b, T: ?Sized> RefMut<'b, T> {
             value: f(value),
             borrow,
         }
+    }
+
+    /// Splits a `RefMut` into multiple `RefMut`s for different components of the
+    /// borrowed data.
+    ///
+    /// The underlying `RefCell` will remain mutably borrowed until both
+    /// returned `RefMut`s go out of scope.
+    ///
+    /// The `RefCell` is already mutably borrowed, so this cannot fail.
+    ///
+    /// This is an associated function that needs to be used as
+    /// `RefMut::map_split(...)`. A method would interfere with methods of the
+    /// same name on the contents of a `RefCell` used through `Deref`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::cell::{RefCell, RefMut};
+    ///
+    /// let cell = RefCell::new([1, 2, 3, 4]);
+    /// let borrow = cell.borrow_mut();
+    /// let (mut begin, mut end) = RefMut::map_split(borrow, |slice| slice.split_at_mut(2));
+    /// assert_eq!(*begin, [1, 2]);
+    /// assert_eq!(*end, [3, 4]);
+    /// begin.copy_from_slice(&[4, 3]);
+    /// end.copy_from_slice(&[2, 1]);
+    /// ```
+    #[inline]
+    pub fn map_split<U: ?Sized, V: ?Sized, F>(
+        orig: RefMut<'b, T>, f: F
+    ) -> (RefMut<'b, U>, RefMut<'b, V>)
+        where F: FnOnce(&mut T) -> (&mut U, &mut V)
+    {
+        let (a, b) = f(orig.value);
+        let borrow = orig.borrow.clone();
+        (RefMut { value: a, borrow }, RefMut { value: b, borrow: orig.borrow })
     }
 
     /// Make a new `RefValMut` from the borrowed data.
