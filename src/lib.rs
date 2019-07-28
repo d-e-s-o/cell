@@ -9,15 +9,13 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-#![deny(
-  missing_debug_implementations,
-  missing_docs,
-  unused_import_braces,
-  unused_results,
-)]
 #![warn(
   future_incompatible,
+  missing_debug_implementations,
+  missing_docs,
   rust_2018_compatibility,
+  unused_import_braces,
+  unused_results,
 )]
 
 //! A replacement of std::cell::RefCell adding advanced support for
