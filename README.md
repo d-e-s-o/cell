@@ -13,6 +13,13 @@ cell
 additional mapping capabilities. It can be used as a drop-in replacement
 for `std::cell::RefCell` where this additional functionality is required.
 
+### *Warning:*
+----------------------------------------------------------------------
+> **cell** was found to contain [a subtle unsafety][cell-issue-5], a
+> work around for which is not known with current versions of Rust.
+> Usage of the crate is therefore discouraged.
+----------------------------------------------------------------------
+
 
 The Problem
 -----------
@@ -110,12 +117,12 @@ problem stems from the fact that we require access to `Ref` internals in
 order to provide this functionality. Such a trait would alleviate the
 need for providing alternative `RefCell` and `Ref` implementations.
 
-No other existing solutions for this problem have been found.
+No other solutions for this problem have been found, but the discussion
+around possible alternatives is still open as part of Rust [issue
+#54776][rust-issue-54776].
 
-A discussion around the upstreaming of this functionality is tracked by
-Rust [issue #54776][rust-issue-54776].
 
-
+[cell-issue-5]: https://github.com/d-e-s-o/cell/issues/5
 [docs-rs]: https://docs.rs/crate/cell
 [rust-ref-cell]: https://doc.rust-lang.org/std/cell/struct.RefCell.html
 [rust-ref]: https://doc.rust-lang.org/std/cell/struct.Ref.html

@@ -1,5 +1,6 @@
 Unreleased
 ----------
+- Added warning about unsafety issue to README
 - Updated original `cell` baseline to Rust 1.35.0
 - Downgraded `deny` crate-level lints to `warn`
 
