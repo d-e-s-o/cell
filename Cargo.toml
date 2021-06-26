@@ -12,7 +12,4 @@ description = """
 A replacement of std::cell::RefCell adding advanced support for mapping borrows.
 """
 
-[badges]
-gitlab = { repository = "d-e-s-o/cell", branch = "master" }
-
 [dependencies]
